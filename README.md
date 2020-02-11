@@ -7,3 +7,4 @@
 * [Uzbakanov Omirzak](https://github.com/pumalcn)
 
 ### Class diagram:
+![](https://github.com/Mynzhassar/iBolit/blob/master/Class%20diagram.jpg)
