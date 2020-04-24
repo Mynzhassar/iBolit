@@ -1,0 +1,10 @@
+DEBUG -- 2020-04-24 11:33:55,003: User created, ID: us
+INFO -- 2020-04-24 11:33:55,004: User created, ID: us
+WARNING -- 2020-04-24 11:33:55,005: User created, ID: us
+ERROR -- 2020-04-24 11:33:55,005: User created, ID: us
+CRITICAL -- 2020-04-24 11:33:55,006: User created, ID: us
+DEBUG -- 2020-04-24 11:50:29,946: dias user created
+INFO -- 2020-04-24 11:50:29,947: dias user created
+WARNING -- 2020-04-24 11:50:29,950: dias user created
+ERROR -- 2020-04-24 11:50:29,951: dias user created
+CRITICAL -- 2020-04-24 11:50:29,951: dias user created

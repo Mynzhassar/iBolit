@@ -96,7 +96,7 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
-AUTH_USER_MODEL = 'users.MainUser'
+AUTH_USER_MODEL = 'users.MyUser'
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -185,43 +185,31 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s -- %(asctime)s -- %(message)s',
+            'format': '%(levelname)s -- %(asctime)s: %(message)s',
         },
         'simple': {
-            'format': '%(levelname)s -- %(message)s',
+            'format': '%(levelname)s -- %(message)s'
         }
     },
     'handlers': {
-        'main_file': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs/main') + '/main.log',
-            'maxBytes': 1024 * 1024 * 5,  # 5 MB
-            'backupCount': 3,
-            'formatter': 'verbose'
-        },
-        'users_file': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs/users') + '/users.log',
-            'maxBytes': 1024 * 1024 * 5,  # 5 MB
-            'backupCount': 3,
+        'file_handler': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/users.log',
             'formatter': 'verbose'
         },
         'console_handler': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
         }
     },
     'loggers': {
-        'main': {
-            'handlers': ['main_file', 'console_handler'],
-            'level': 'INFO',
-
+        'users': {
+            'handlers': ['file_handler', 'console_handler'],
+            'level': 'DEBUG',
         },
     },
 }
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

@@ -1,31 +1,31 @@
 import logging
-
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import  viewsets
-from rest_framework import generics
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import viewsets, generics
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from users.serializers import UserSerializer
-from users.models import MainUser
+from users.models import MyUser
 
 logger = logging.getLogger(__name__)
 
-class RegisterUserAPIView(APIView):
-    http_method_names = ['POST']
 
-    def post(self,request):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            logger.info(f"{self.request.user} registered as: {serializer.data.get('username')}")
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class UserCreateView(generics.CreateAPIView):
+    permission_classes = (AllowAny,)
+    authentication_classes = ()
+    queryset = MyUser.objects.all()
+    serializer_class = UserSerializer
+
+    def perform_create(self, serializer):
+        serializer.save()
+        logger.debug(f'{serializer.instance} user created')
+        logger.info(f'{serializer.instance} user created')
+        logger.warning(f'{serializer.instance} user created')
+        logger.error(f'{serializer.instance} user created')
+        logger.critical(f'{serializer.instance} user created')
+
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return MainUser.objects.all()
+        return MyUser.objects.all()

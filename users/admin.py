@@ -1,21 +1,17 @@
 from django.contrib import admin
-from users.models import MainUser, Profile
 from django.contrib.auth.admin import UserAdmin
 
-
-class InlineProfile(admin.StackedInline):
-    model = Profile
-    verbose_name = 'Profile'
-    verbose_name_plural = 'Profiles'
-    can_delete = False
+from users.models import MyUser, Profile
 
 
-@admin.register(MainUser)
-class MainUserAdmin(UserAdmin):
-    inlines = [InlineProfile, ]
+@admin.register(MyUser)
+class MyUserAdmin(UserAdmin):
+    list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff')
+    fieldsets = (
+        (None, {'fields': ('username', 'password')}),
+    )
 
 
 @admin.register(Profile)
-class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['id','bio','address','user']
-
+class MyProfile(admin.ModelAdmin):
+    list_display = ('user', 'bio', 'address')

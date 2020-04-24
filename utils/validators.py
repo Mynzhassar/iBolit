@@ -1,16 +1,19 @@
 import os
 from django.core.exceptions import ValidationError
-from utils.constants import TASK_ALLOWED_EXTS
+
+MAX_FILE_SIZE = 1024000
+ALLOWED_EXTENSIONS = ['.jpg', '.png']
 
 
-def document_size(value):
+def validate_document_size(value):
+    if value.size > MAX_FILE_SIZE:
+        raise ValidationError(f'max file size is: {MAX_FILE_SIZE}')
 
-    if value.size > 200000:
-        raise ValidationError('invalid file size')
 
+def validate_document_extension(value):
+    split_ext = os.path.splitext(value.name)
 
-def document_extension(value):
-    ext = os.path.splitext(value.name)[1]
-
-    if not ext.lower() in TASK_ALLOWED_EXTS:
-        raise ValidationError(f'not allowed ext, allowed ({TASK_ALLOWED_EXTS})')
+    if len(split_ext) > 1:
+        ext = split_ext[1]
+        if not ext.lower() in ALLOWED_EXTENSIONS:
+            raise ValidationError(f'not allowed ext, allowed ({ALLOWED_EXTENSIONS})')
