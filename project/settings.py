@@ -185,30 +185,42 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s -- %(asctime)s: %(message)s',
+            'format': '%(levelname)s -- %(asctime)s -- %(message)s',
         },
         'simple': {
-            'format': '%(levelname)s -- %(message)s'
+            'format': '%(levelname)s -- %(message)s',
         }
     },
     'handlers': {
-        'file_handler': {
-            'level': 'DEBUG',
+        'core_file': {
+            'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': 'logs/users.log',
+            'filename': os.path.join(BASE_DIR, 'logs') + '/core/core.log',
+            'formatter': 'verbose'
+        },
+        'users_handler': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs') + '/users/users.log',
             'formatter': 'verbose'
         },
         'console_handler': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
         }
     },
     'loggers': {
-        'users': {
-            'handlers': ['file_handler', 'console_handler'],
+        'core': {
+            'handlers': ['core_file', 'console_handler'],
             'level': 'DEBUG',
+            'propogate': True,
         },
+        'users': {
+            'handlers': ['users_handler', 'console_handler'],
+            'level': 'DEBUG',
+            'propogate': True
+        }
     },
 }
 MEDIA_URL = '/media/'
