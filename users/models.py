@@ -5,6 +5,7 @@ from django.core.mail import send_mail
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from utils import validators
 
 
 class MyAbstractUser(AbstractBaseUser, PermissionsMixin):
@@ -75,7 +76,9 @@ class MyUser(MyAbstractUser):
 class Profile(models.Model):
     user = models.OneToOneField(MyUser, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500)
-    address = models.CharField(max_length=300)
+    avatar = models.FileField(upload_to='media/avatars', validators=[validators.validate_document_extension,
+                                                                     validators.validate_document_size],
+                              null=True, blank=True)
 
     def __str__(self):
         return f'{self.user.username}'

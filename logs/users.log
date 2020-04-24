@@ -8,3 +8,8 @@ INFO -- 2020-04-24 11:50:29,947: dias user created
 WARNING -- 2020-04-24 11:50:29,950: dias user created
 ERROR -- 2020-04-24 11:50:29,951: dias user created
 CRITICAL -- 2020-04-24 11:50:29,951: dias user created
+DEBUG -- 2020-04-24 19:46:32,772: asd user created
+INFO -- 2020-04-24 19:46:32,780: asd user created
+WARNING -- 2020-04-24 19:46:32,782: asd user created
+ERROR -- 2020-04-24 19:46:32,783: asd user created
+CRITICAL -- 2020-04-24 19:46:32,785: asd user created
