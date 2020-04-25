@@ -46,7 +46,7 @@ class Staff(models.Model):
 
 
 class Doctor(Staff):
-    pass
+    experience = models.PositiveSmallIntegerField()
 
     class Meta:
         verbose_name = 'Doctor'
@@ -57,7 +57,14 @@ class Doctor(Staff):
 
 
 class Consultant(Staff):
-    pass
+    phone = models.CharField(max_length=10)
+
+    class Meta:
+        verbose_name = "Consultant"
+        verbose_name_plural = "Consultants"
+
+    def __str__(self):
+        return f"{self.name} {self.surname}"
 
 
 class Service(models.Model):
