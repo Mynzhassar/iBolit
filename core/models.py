@@ -39,6 +39,8 @@ class Staff(models.Model):
     avatar = models.ImageField(upload_to='photos/', null=True, blank=True)
     name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
+    job_title = models.IntegerField()
+    salary = models.IntegerField()
     age = models.PositiveIntegerField()
 
     class Meta:
@@ -47,13 +49,14 @@ class Staff(models.Model):
 
 class Doctor(Staff):
     experience = models.PositiveSmallIntegerField()
+    cabinet = models.IntegerField()
 
     class Meta:
         verbose_name = 'Doctor'
         verbose_name_plural = 'Doctors'
 
     def __str__(self):
-        return '{} {}'.format(self.surname, self.name)
+        return '{} {}'.format(self.surname, self.job_title)
 
 
 class Consultant(Staff):
@@ -64,7 +67,7 @@ class Consultant(Staff):
         verbose_name_plural = "Consultants"
 
     def __str__(self):
-        return f"{self.name} {self.surname}"
+        return f"{self.surname} {self.name}"
 
 
 class Service(models.Model):
@@ -84,11 +87,13 @@ class Order(models.Model):
     client = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='my_orders')
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='my_doctors', null=True)
     service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='my_services', null=True)
+    consultant = models.ForeignKey(Consultant,on_delete=models.CASCADE,related_name='my_calls',null=True)
     created_at = models.DateTimeField(auto_now=True)
     payment_type = models.PositiveSmallIntegerField(choices=PAYMENT_TYPES, default=PAYMENT_VIA_CASH)
     date = models.CharField(max_length=10000)
+    time = models.CharField(max_length=255)
 
     objects = OrderManager()
 
     def __str__(self):
-        pass
+        return self.date

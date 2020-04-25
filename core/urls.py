@@ -1,7 +1,9 @@
 from django.urls import path
-from core.views.views import ClinicCreateListDelete
+from core.views.views import *
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register('clinics', ClinicViewSet)
 
 
-urlpatterns = [
-    path("clinics/", ClinicCreateListDelete.as_view())
-]
+urlpatterns = router.urls
