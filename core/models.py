@@ -1,25 +1,14 @@
 from django.db import models
-from core.constants import *
-from django.db.models import Q
-from datetime import datetime
+from utils.constants import *
+from core.managers import ClinicManager, DepartmentManager, OrderManager
 from users.models import MyUser
 
-class ClinicManager(models.Manager):
-
-
-    def state_clinics(self):
-        return self.filter(status=CLINIC_STATE)
-
-    def private_clinics(self):
-        return self.filter(status=CLINIC_PRIVATE)
-
-    def filter_by_status(self,status):
-        return self.filter(status=status)
 
 class Clinic(models.Model):
     title = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
     info = models.TextField()
+    rating = models.PositiveSmallIntegerField(default=1)
     status = models.PositiveSmallIntegerField(choices=CLINIC_STATUSES, default=CLINIC_STATE)
 
     objects = ClinicManager()
@@ -27,15 +16,12 @@ class Clinic(models.Model):
     def __str__(self):
         return self.title
 
-class DepartmentManager(models.Manager):
-    def filter_by_department(self,direction):
-        return self.filter(direction=direction)
 
 class Department(models.Model):
+    clinic = models.ForeignKey(Clinic, on_delete=models.CASCADE)
     direction = models.PositiveSmallIntegerField(choices=CLINIC_DEPARTMENTS, default=THERAPEUTIC_DEPARTMENT)
     info = models.TextField()
     floor = models.PositiveSmallIntegerField()
-    clinic = models.ForeignKey(Clinic,on_delete=models.CASCADE, related_name='departments')
 
     objects = DepartmentManager()
 
@@ -47,20 +33,20 @@ class Department(models.Model):
         return self.direction
 
 
-class Person(models.Model):
+class Staff(models.Model):
+    clinic = models.ForeignKey(Clinic, on_delete=models.CASCADE)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    avatar = models.ImageField(upload_to='photos/', null=True, blank=True)
     name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
-
+    age = models.PositiveIntegerField()
 
     class Meta:
         abstract = True
 
-class Doctor(Person):
-    photo = models.ImageField(upload_to='photos/', null=True, blank=True)
-    cabinet = models.PositiveSmallIntegerField()
-    salary = models.IntegerField()
-    clinic = models.ForeignKey(Clinic, on_delete=models.CASCADE, related_name='doctors')
-    department = models.ForeignKey(Department,on_delete=models.CASCADE, related_name='doctors')
+
+class Doctor(Staff):
+    pass
 
     class Meta:
         verbose_name = 'Doctor'
@@ -68,6 +54,10 @@ class Doctor(Person):
 
     def __str__(self):
         return '{} {}'.format(self.surname, self.name)
+
+
+class Consultant(Staff):
+    pass
 
 
 class Service(models.Model):
@@ -83,20 +73,6 @@ class Service(models.Model):
         return self.title
 
 
-class OrderManager(models.Manager):
-##    def get_active(self):
-##        return self.filter(due_to__gte=datetime.now())
-##
-##  def get_expired(self):
-##      return self.filter(due_to__lte=datetime.now())
-##
-    def get_done_cash(self):
-        return self.filter(Q(due_to__lte=datetime.now()) & Q(payment_type=PAYMENT_VIA_CASH))
-
-    def get_done_card(self):
-        return self.filter(Q(due_to__lte=datetime.now()) & Q(payment_type=PAYMENT_VIA_CARD))
-
-
 class Order(models.Model):
     client = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='my_orders')
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='my_doctors', null=True)
@@ -109,16 +85,3 @@ class Order(models.Model):
 
     def __str__(self):
         pass
-
-
-
-
-
-
-
-
-
-
-
-
-

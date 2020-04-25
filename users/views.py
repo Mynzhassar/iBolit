@@ -1,7 +1,7 @@
 import logging
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 class RegisterUserAPIView(APIView):
+    permission_classes = (AllowAny,)
     http_method_names = ['post']
 
     def post(self, request):

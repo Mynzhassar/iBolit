@@ -1,0 +1,12 @@
+INFO -- 2020-04-25 14:27:13,816 -- omirzak user created
+WARNING -- 2020-04-25 14:27:13,818 -- omirzak user created
+ERROR -- 2020-04-25 14:27:13,818 -- omirzak user created
+CRITICAL -- 2020-04-25 14:27:13,819 -- omirzak user created
+INFO -- 2020-04-25 14:30:28,714 -- 123 user created
+WARNING -- 2020-04-25 14:30:28,714 -- 123 user created
+ERROR -- 2020-04-25 14:30:28,714 -- 123 user created
+CRITICAL -- 2020-04-25 14:30:28,717 -- 123 user created
+INFO -- 2020-04-25 14:44:03,013 -- notadmin user created
+WARNING -- 2020-04-25 14:44:03,015 -- notadmin user created
+ERROR -- 2020-04-25 14:44:03,016 -- notadmin user created
+CRITICAL -- 2020-04-25 14:44:03,019 -- notadmin user created
