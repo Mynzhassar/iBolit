@@ -1,5 +1,6 @@
 from django.db import models
 from utils.constants import *
+from utils import validators
 from core.managers import ClinicManager, DepartmentManager, OrderManager
 from users.models import MyUser
 
@@ -20,7 +21,7 @@ class Clinic(models.Model):
 class Department(models.Model):
     clinic = models.ForeignKey(Clinic, on_delete=models.CASCADE)
     direction = models.PositiveSmallIntegerField(choices=CLINIC_DEPARTMENTS, default=THERAPEUTIC_DEPARTMENT)
-    info = models.TextField()
+    info = models.TextField(max_length=100)
     floor = models.PositiveSmallIntegerField()
 
     objects = DepartmentManager()
@@ -36,10 +37,12 @@ class Department(models.Model):
 class Staff(models.Model):
     clinic = models.ForeignKey(Clinic, on_delete=models.CASCADE)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
-    avatar = models.ImageField(upload_to='photos/', null=True, blank=True)
+    avatar = models.ImageField(upload_to='media/photos',
+                               validators=[validators.validate_document_size,
+                                           validators.validate_document_extension],
+                               null=True, blank=True)
     name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
-    age = models.PositiveIntegerField()
 
     class Meta:
         abstract = True
@@ -47,7 +50,6 @@ class Staff(models.Model):
 
 class Doctor(Staff):
     experience = models.PositiveSmallIntegerField()
-    cabinet = models.PositiveSmallIntegerField()
 
     class Meta:
         verbose_name = 'Doctor'
@@ -85,7 +87,7 @@ class Order(models.Model):
     client = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='my_orders')
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='my_doctors', null=True)
     service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='my_services', null=True)
-    consultant = models.ForeignKey(Consultant,on_delete=models.CASCADE,related_name='my_calls',null=True)
+    consultant = models.ForeignKey(Consultant, on_delete=models.CASCADE, related_name='my_calls', null=True)
     created_at = models.DateTimeField(auto_now=True)
     payment_type = models.PositiveSmallIntegerField(choices=PAYMENT_TYPES, default=PAYMENT_VIA_CASH)
     date = models.CharField(max_length=10000)

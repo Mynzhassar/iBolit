@@ -1,14 +1,14 @@
 from django.urls import path
 from core.views.views import ClinicAPIView, ClinicDetailedApiView
 
-from core.views.view_sets import ClinicViewSet
+from core.views.view_sets import DepartmentViewSet, DoctorViewSet, ConsultantViewSet
 from rest_framework import routers
 
 router = routers.DefaultRouter()
 
-# router.register(r'clinics', ClinicViewSet, basename="core")
-# router.register(r'departments', DepartmentViewSet, basename="core")
-# router.register(r'orders', OrderViewSet, basename="core")
+router.register(r'departments', DepartmentViewSet, basename="core")
+router.register(r'doctors', DoctorViewSet, basename="core")
+router.register(r'consultants', ConsultantViewSet, basename="core")
 
 urlpatterns = [
     path("clinics/", ClinicAPIView.as_view()),

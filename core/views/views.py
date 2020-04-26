@@ -25,11 +25,11 @@ class ClinicAPIView(APIView):
         serializer = ClinicSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            logger.debug(f'{serializer.instance} created')
-            logger.info(f'{serializer.instance} created')
-            logger.warning(f'{serializer.instance} created')
-            logger.error(f'{serializer.instance} created')
-            logger.critical(f'{serializer.instance} created')
+            logger.debug(f'"{serializer.instance}" clinic created')
+            logger.info(f'"{serializer.instance}" clinic created')
+            logger.warning(f'"{serializer.instance}" clinic created')
+            logger.error(f'"{serializer.instance}" clinic created')
+            logger.critical(f'"{serializer.instance}" clinic created')
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

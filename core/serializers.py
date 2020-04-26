@@ -1,25 +1,12 @@
 from rest_framework import serializers
 
 from core.models import Clinic, Department, Doctor, Consultant, Service, Order
-from utils.constants import *
-
-
-def rating_validator(rating):
-    if rating not in range(10): raise ValueError(f"{rating} rating is invalid")
-
-
-def floor_validator(floor):
-    if floor not in range(1, 4): raise ValueError(f"{floor} floor is invalid")
-
-
-def direction_validator(self, value):
-    if value < 1 or value > len(CLINIC_DEPARTMENTS) or not isinstance(value, int):
-        raise serializers.ValidationError(f'Departments type directions: {CLINIC_DEPARTMENTS}')
+from utils import validators
 
 
 class ClinicSerializer(serializers.ModelSerializer):
     title = serializers.CharField(required=True)
-    rating = serializers.IntegerField(validators=[rating_validator])
+    rating = serializers.IntegerField(validators=[validators.rating_validator])
 
     class Meta:
         model = Clinic
@@ -28,12 +15,13 @@ class ClinicSerializer(serializers.ModelSerializer):
 
 class DepartmentSerializer(serializers.ModelSerializer):
     clinic_id = serializers.IntegerField(write_only=True)
-    floor = serializers.IntegerField(required=True, validators=[floor_validator])
-    direction = serializers.IntegerField(validators=[direction_validator])
+    floor = serializers.IntegerField(required=True, validators=[validators.floor_validator])
+    direction = serializers.IntegerField(validators=[validators.direction_validator])
+    info = serializers.CharField(allow_blank=True)
 
     class Meta:
         model = Department
-        fields = ('id', 'clinic_id', 'direction', 'floor')
+        fields = ('id', 'clinic_id', 'direction', 'floor', 'info')
 
 
 class DepartmentDetailedSerializer(serializers.ModelSerializer):
@@ -42,8 +30,8 @@ class DepartmentDetailedSerializer(serializers.ModelSerializer):
 
 
 class DoctorSerializer(serializers.Serializer):
-    clinic = serializers.IntegerField(write_only=True)
-    department = serializers.IntegerField(write_only=True)
+    clinic_id = serializers.IntegerField(write_only=True)
+    department_id = serializers.IntegerField(write_only=True)
     surname = serializers.CharField(required=True)
     name = serializers.CharField(required=True)
     experience = serializers.IntegerField(required=True)
@@ -62,11 +50,11 @@ class DoctorSerializer(serializers.Serializer):
 
 
 class ConsultantSerializer(serializers.Serializer):
-    clinic = serializers.IntegerField(write_only=True)
-    department = serializers.IntegerField(write_only=True)
+    clinic_id = serializers.IntegerField(write_only=True)
+    department_id = serializers.IntegerField(write_only=True)
     surname = serializers.CharField(required=True)
     name = serializers.CharField(required=True)
-    phone = serializers.CharField(required=True)
+    phone = serializers.CharField(required=True, validators=[validators.phone_number_validator])
 
     def create(self, validated_data):
         consultant = Consultant(**validated_data)
@@ -79,7 +67,6 @@ class ConsultantSerializer(serializers.Serializer):
         instance.phone = validated_data.get('phone', instance.phone)
         instance.save()
         return instance
-
 
 
 class ServiceSerializer(serializers.ModelSerializer):

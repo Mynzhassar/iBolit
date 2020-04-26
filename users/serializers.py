@@ -1,9 +1,10 @@
 from rest_framework import serializers
 from users.models import MyUser, Profile
+from utils import validators
 
 
 class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True, validators=[validators.password_validator])
 
     class Meta:
         model = MyUser

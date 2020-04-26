@@ -19,11 +19,11 @@ class RegisterUserAPIView(APIView):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            logger.debug(f'{serializer.instance} user created')
-            logger.info(f'{serializer.instance} user created')
-            logger.warning(f'{serializer.instance} user created')
-            logger.error(f'{serializer.instance} user created')
-            logger.critical(f'{serializer.instance} user created')
+            logger.debug(f'"{serializer.instance}" user created')
+            logger.info(f'"{serializer.instance}" user created')
+            logger.warning(f'"{serializer.instance}" user created')
+            logger.error(f'"{serializer.instance}" user created')
+            logger.critical(f'"{serializer.instance}" user created')
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
