@@ -7,7 +7,7 @@ from users.models import MyUser
 class Clinic(models.Model):
     title = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
-    info = models.TextField()
+    info = models.TextField(max_length=255)
     rating = models.PositiveSmallIntegerField(default=1)
     status = models.PositiveSmallIntegerField(choices=CLINIC_STATUSES, default=CLINIC_STATE)
 
@@ -39,8 +39,6 @@ class Staff(models.Model):
     avatar = models.ImageField(upload_to='photos/', null=True, blank=True)
     name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
-    job_title = models.IntegerField()
-    salary = models.IntegerField()
     age = models.PositiveIntegerField()
 
     class Meta:
@@ -49,7 +47,7 @@ class Staff(models.Model):
 
 class Doctor(Staff):
     experience = models.PositiveSmallIntegerField()
-    cabinet = models.IntegerField()
+    cabinet = models.PositiveSmallIntegerField()
 
     class Meta:
         verbose_name = 'Doctor'

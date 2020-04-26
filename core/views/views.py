@@ -1,126 +1,63 @@
 import logging
 
+from django.http import Http404
 from rest_framework import status
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import viewsets
-from rest_framework import mixins
-from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
-from core import serializers
-from core import models
-from core.permissions import UserPermission
-from rest_framework.decorators import action
+
+from core.serializers import ClinicSerializer
+from core.models import Clinic
 
 logger = logging.getLogger(__name__)
 
 
-class ClinicViewSet(viewsets.ModelViewSet):
-    queryset = models.Clinic.objects.all()
-    serializer_class = serializers.ClinicSerializer
-    permission_classes = (UserPermission,)
+class ClinicAPIView(APIView):
+    permission_classes = (AllowAny,)
+    http_method_names = ['get', 'post']
 
-    def get_serializer_class(self):
-        if self.action == 'list':
-            return serializers.ClinicShortSerializer
-        return serializers.ClinicSerializer
-
-    def perform_create(self, serializer):
-        serializer.save(creator=self.request.user)
-        logger.info(f"{self.request.user} created clinic {serializer.data.get('title')}")
-        return serializer.data
-
-    @action(methods=['GET'], detail=False)
-    def my(self, request):
-        clinics = models.Clinic.objects.filter(creator_id=self.request.id)
-        serializer = self.get_serializer(clinics, many=True)
+    def get(self, request):
+        clinics = Clinic.objects.all()
+        serializer = ClinicSerializer(clinics, many=True)
         return Response(serializer.data)
 
-    @action(methods=['GET', 'POST'], detail=True)
-    def departments(self, request, pk):
-        if request.method == 'GET':
-            cl = get_object_or_404(models.Clinic, id=pk)
-            res = serializers.DepartmentSerializer(models.Department.objects.filter(clinic_id=cl.id), many=True)
-
-            return Response(res.data)
-
-        if request.method == 'POST':
-            instance = self.get_object()
-            serializer = serializers.DepartmentSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            logger.info(f"{self.request.user} created department: {serializer.data.get('direction')}")
-            return Response(serializer.errors)
-
-    @action(methods=['GET', 'POST'], detail=True)
-    def services(self, request, pk):
-        if request.method == 'GET':
-            cl = get_object_or_404(models.Clinic, id=pk)
-            res = serializers.ServiceSerializer(models.Service.objects.filter(clinic_id=cl.id), many=True)
-
-            return Response(res.data)
-
-        if request.method == 'POST':
-            serializer = serializers.ServiceSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            logger.info(f"{self.request.user} created service: {serializer.data.get('title')}")
-            return Response(serializer.errors)
+    def post(self, request):
+        serializer = ClinicSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            logger.debug(f'{serializer.instance} created')
+            logger.info(f'{serializer.instance} created')
+            logger.warning(f'{serializer.instance} created')
+            logger.error(f'{serializer.instance} created')
+            logger.critical(f'{serializer.instance} created')
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class DepartmentDetailViewSet(mixins.RetrieveModelMixin,
-                              mixins.UpdateModelMixin,
-                              mixins.DestroyModelMixin,
-                              viewsets.GenericViewSet):
-    queryset = models.Department.objects.all()
-    serializer_class = serializers.DepartmentSerializer
-    permission_classes = (UserPermission,)
+class ClinicDetailedApiView(APIView):
+    permission_classes = (IsAuthenticated, )
+    http_method_names = ['get', 'put', 'delete']
 
-    @action(methods=['GET', 'POST'], detail=True)
-    def doctors(self, request, pk):
-        if request.method == 'GET':
-            department = get_object_or_404(models.Department, id=pk)
-            res = serializers.DoctorSerializer(models.Doctor.objects.filter(department_id=department.id), many=True)
+    def get_object(self, pk):
+        try:
+            return Clinic.objects.get(pk=pk)
+        except Clinic.DoesNotExist:
+            raise Http404
 
-            return Response(res.data)
+    def get(self, request, pk):
+        clinic = Clinic.objects.filter(pk=pk)
+        serializer = ClinicSerializer(clinic, many=True)
+        return Response(serializer.data)
 
-        if request.method == 'POST':
-            instance = self.get_object()
-            serializer = serializers.DoctorSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            logger.info(f"{self.request.user} created doctor: {serializer.data.get('name')}")
-            return Response(serializer.errors)
+    def put(self, request, pk):
+        clinic = self.get_object(pk)
+        serializer = ClinicSerializer(clinic, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        @action(methods=['GET', 'POST'], detail=True)
-        def consultants(self, request, pk):
-            if request.method == 'GET':
-                department = get_object_or_404(models.Department, id=pk)
-                res = serializers.ConsultantSerializer(models.Consultant.objects.filter(department_id=department.id),
-                                                       many=True)
-
-                return Response(res.data)
-
-            if request.method == 'POST':
-                instance = self.get_object()
-                serializer = serializers.ConsultantSerializer(data=request.data)
-                if serializer.is_valid():
-                    serializer.save()
-                    return Response(serializer.data)
-                logger.info(f"{self.request.user} created consultant: {serializer.data.get('name')}")
-                return Response(serializer.errors)
-
-
-class OrderViewSet(viewsets.ModelViewSet):
-    queryset = models.Order.objects.all()
-    serializer_class = serializers.OrderSerializer
-    permission_classes = (UserPermission,)
-
-    def perform_create(self, serializer):
-        serializer.save(creator=self.request.user)
-        logger.info(f"{self.request.user} created order {serializer.data.get('id')}")
-        return serializer.data
-
-
+    def delete(self, request, pk):
+        snippet = self.get_object(pk)
+        snippet.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

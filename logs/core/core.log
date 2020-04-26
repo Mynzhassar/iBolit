@@ -1,0 +1,12 @@
+INFO -- 2020-04-26 13:27:13,868 -- Task list object created, ID: bestclinic
+WARNING -- 2020-04-26 13:27:13,869 -- Task list object created, ID: bestclinic
+ERROR -- 2020-04-26 13:27:13,872 -- Task list object created, ID: bestclinic
+CRITICAL -- 2020-04-26 13:27:13,874 -- Task list object created, ID: bestclinic
+INFO -- 2020-04-26 13:49:51,118 -- bestclinic created
+WARNING -- 2020-04-26 13:49:51,119 -- bestclinic created
+ERROR -- 2020-04-26 13:49:51,119 -- bestclinic created
+CRITICAL -- 2020-04-26 13:49:51,120 -- bestclinic created
+INFO -- 2020-04-26 13:52:36,989 -- bestclinic created
+WARNING -- 2020-04-26 13:52:36,989 -- bestclinic created
+ERROR -- 2020-04-26 13:52:36,990 -- bestclinic created
+CRITICAL -- 2020-04-26 13:52:36,991 -- bestclinic created
