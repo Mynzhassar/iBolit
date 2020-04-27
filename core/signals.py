@@ -1,7 +1,10 @@
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from core.models import Clinic, Department
+<<<<<<< HEAD
+=======
 
+>>>>>>> 53e38d7417707bead91379e06dd939c23d3f6425
 
 
 @receiver(post_save, sender=Clinic)

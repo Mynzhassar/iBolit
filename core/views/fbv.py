@@ -4,13 +4,9 @@ from django.http import Http404
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from core.models import *
 from core.serializers import *
+
 logger = logging.getLogger(__name__)
-
-
-
-
 
 
 @api_view(['GET', 'POST'])
@@ -28,9 +24,8 @@ def clinic_list(request):
             logger.warning(f'"{serializer.instance}" clinic created')
             logger.error(f'"{serializer.instance}" clinic created')
             logger.critical(f'"{serializer.instance}" clinic created')
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
-        return Response(serializer.errors,status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -52,9 +47,6 @@ def clinic_detail(request, pk):
     elif request.method == 'DELETE':
         clinic.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-
 
 # class ClinicAPIView(APIView):
 #     permission_classes = (AllowAny,)
