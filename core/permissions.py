@@ -13,7 +13,7 @@ class UserPermission(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if view.action == 'list':
-            return request.user.is_authenticated()
+            return request.user.is_authenticated
         elif view.action in ['create', 'retrieve', 'update', 'partial_update', 'destroy']:
             return request.user.is_authenticated and request.user.is_staff
         else:
@@ -21,7 +21,7 @@ class UserPermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         # Deny actions on objects if the user is not authenticated
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return False
 
         if view.action == 'retrieve':

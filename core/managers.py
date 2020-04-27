@@ -22,6 +22,12 @@ class DepartmentManager(models.Manager):
         return self.filter(direction=direction)
 
 
+class ServiceManager(models.Manager):
+
+    def filter_by_title(self,title):
+        return self.filter(title=title)
+
+
 class OrderManager(models.Manager):
     # def get_active(self):
     #     return self.filter(due_to__gte=datetime.now())

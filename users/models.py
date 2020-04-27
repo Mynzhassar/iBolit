@@ -76,7 +76,7 @@ class MyUser(MyAbstractUser):
 class Profile(models.Model):
     user = models.OneToOneField(MyUser, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500)
-    avatar = models.FileField(upload_to='media/avatars', validators=[validators.validate_document_extension,
+    avatar = models.FileField(upload_to='media', validators=[validators.validate_document_extension,
                                                                      validators.validate_document_size],
                               null=True, blank=True)
 
