@@ -114,3 +114,4 @@ class TherapyDocument(models.Model):
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     therapy = models.FileField(upload_to=therapy_document_path, validators=[therapy_document_size,therapy_document_extension],
                                null=True,blank=True)
+
