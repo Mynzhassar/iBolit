@@ -10,8 +10,6 @@ class ClinicSerializer(serializers.ModelSerializer):
     title = serializers.CharField(required=True)
     rating = serializers.IntegerField(validators=[validators.rating_validator])
 
-    #   creator = UserSerializer(read_only=True)
-
     class Meta:
         model = Clinic
         fields = ('id', 'title', 'rating', 'status',)
@@ -35,7 +33,7 @@ class DepartmentSerializer(serializers.ModelSerializer):
 
 class DepartmentDetailedSerializer(DepartmentSerializer):
     class Meta(DepartmentSerializer.Meta):
-        fields = DepartmentSerializer.Meta.fields + ('clinic',)
+        fields = DepartmentSerializer.Meta.fields
 
 
 class DoctorSerializer(serializers.Serializer):
@@ -87,7 +85,7 @@ class ServiceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Service
-        fields = ('id', 'title', 'clinic_id', 'clinic')
+        fields = ('id', 'title', 'clinic_id')
 
 
 class ServiceDetailedSerializer(ServiceSerializer):
@@ -96,13 +94,13 @@ class ServiceDetailedSerializer(ServiceSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    client = UserSerializer(read_only=True)
-    doctor = DoctorSerializer(read_only=True)
-    service = ServiceDetailedSerializer(read_only=True)
+    client_id = serializers.IntegerField(write_only=True)
+    doctor_id = serializers.IntegerField(write_only=True)
+    service_id = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = Order
-        fields = ('id', 'client', 'doctor', 'service', 'payment_type', 'date', 'time')
+        fields = ('id', 'client_id', 'doctor_id', 'service_id', 'payment_type', 'date', 'time')
 
 
 class TherapyDocumentSerializer(serializers.ModelSerializer):

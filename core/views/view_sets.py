@@ -8,18 +8,13 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from core import models, serializers, permissions
 
-
 logger = logging.getLogger(__name__)
 
 
 class ClinicViewSet(viewsets.ModelViewSet):
     queryset = models.Clinic.objects.all()
     serializer_class = serializers.ClinicDetailedSerializer
-<<<<<<< HEAD
-    permission_classes = (IsAuthenticated, )
-=======
-    permission_classes = (permissions.UserPermission,)
->>>>>>> c81c7530f19485d13ddeeb64a2fea7c19a2282b3
+    permission_classes = (IsAuthenticated,)
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -31,8 +26,6 @@ class ClinicViewSet(viewsets.ModelViewSet):
         logger.info(f"{self.request.user} created clinic: {serializer.data.get('username')}")
         return serializer.data
 
-
-
     @action(methods=['GET', 'POST'], detail=True)
     def departments(self, request, pk):
         if request.method == 'GET':
@@ -42,24 +35,20 @@ class ClinicViewSet(viewsets.ModelViewSet):
 
         if request.method == 'POST':
             instance = self.get_object()
-<<<<<<< HEAD
-        ##  clinic = models.Clinic.objects.get(id=self.kwargs['pk'])
-=======
-            #   request.data['project_id'] = instance.id
->>>>>>> c81c7530f19485d13ddeeb64a2fea7c19a2282b3
+            ##  clinic = models.Clinic.objects.get(id=self.kwargs['pk'])
+            ##request.data['clinic_id'] = instance.id
             serializer = serializers.DepartmentDetailedSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
             logger.info(f"{self.request.user} created department: {serializer.data.get('username')}")
-            return Response(serializer.data)
-
+            return Response(serializer.errors)
 
     @action(methods=['GET', 'POST'], detail=True)
     def services(self, request, pk):
         if request.method == 'GET':
             clinic = get_object_or_404(models.Clinic, id=pk)
-            res = serializers.ServiceSerializer(models.Service.objects.filter(clinic_id=clinic.id), many=True)
+            res = serializers.ServiceDetailedSerializer(models.Service.objects.filter(clinic_id=clinic.id), many=True)
             return Response(res.data)
 
         if request.method == 'POST':
@@ -79,11 +68,7 @@ class DepartmentDetailedViewSet(mixins.RetrieveModelMixin,
                                 viewsets.GenericViewSet):
     queryset = models.Department.objects.all()
     serializer_class = serializers.DepartmentDetailedSerializer
-<<<<<<< HEAD
-    permission_classes = (IsAuthenticated, )
-=======
-    permission_classes = (permissions.UserPermission,)
->>>>>>> c81c7530f19485d13ddeeb64a2fea7c19a2282b3
+    permission_classes = (IsAuthenticated,)
 
     @action(methods=['GET', 'POST'], detail=True)
     def doctors(self, request, pk):
@@ -106,8 +91,9 @@ class DepartmentDetailedViewSet(mixins.RetrieveModelMixin,
     def consultants(self, request, pk):
         if request.method == 'GET':
             department = get_object_or_404(models.Department, id=pk)
-            res = serializers.ConsultantSerializer(models.Consultant.objects.filter(department_id=department.id),
-                                                   many=True)
+            res = serializers.ConsultantDetailedSerializer(
+                models.Consultant.objects.filter(department_id=department.id),
+                many=True)
 
             return Response(res.data)
 
@@ -188,6 +174,7 @@ class OrderViewSet(viewsets.ModelViewSet):
                 return Response(serializer.data)
             logger.info(f"{self.request.user} created therapy document: {serializer.data.get('username')}")
             return Response(serializer.errors)
+
 
 # class DepartmentViewSet(mixins.ListModelMixin,
 #                         mixins.RetrieveModelMixin,

@@ -94,8 +94,8 @@ class Consultant(Staff):
 
 class Order(models.Model):
     client = models.ForeignKey(MyUser, on_delete=models.CASCADE)
-    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='my_orders_to_doctor', null=True)
-    service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='my_orders_to_service', null=True)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now=True)
     payment_type = models.PositiveSmallIntegerField(choices=PAYMENT_TYPES, default=PAYMENT_VIA_CASH)
     date = models.CharField(max_length=10000)
@@ -108,13 +108,8 @@ class Order(models.Model):
 
 
 class TherapyDocument(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
-<<<<<<< HEAD
     therapy = models.FileField(upload_to=therapy_document_path,
                                validators=[therapy_document_size, therapy_document_extension],
                                null=True, blank=True)
-=======
-    therapy = models.FileField(upload_to=therapy_document_path, validators=[therapy_document_size,therapy_document_extension],
-                               null=True,blank=True)
-
->>>>>>> 53e38d7417707bead91379e06dd939c23d3f6425

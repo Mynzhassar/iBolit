@@ -10,7 +10,6 @@ from core.serializers import *
 logger = logging.getLogger(__name__)
 
 
-
 class ClinicAPIView(APIView):
     permission_classes = (AllowAny,)
     http_method_names = ['get', 'post']
@@ -60,6 +59,7 @@ class ClinicDetailedApiView(APIView):
         snippet = self.get_object(pk)
         snippet.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class DepartmentAPIView(APIView):
     permission_classes = (AllowAny,)

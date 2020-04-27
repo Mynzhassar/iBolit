@@ -1,5 +1,5 @@
 from django.contrib import admin
-from core.models import Clinic, Department, Doctor, Consultant, Service, TherapyDocument
+from core.models import Clinic, Department, Doctor, Consultant, Service, TherapyDocument, Order
 
 
 @admin.register(Clinic)
@@ -32,3 +32,8 @@ class ServiceAdmin(admin.ModelAdmin):
 @admin.register(TherapyDocument)
 class TherapyDocumentAdmin(admin.ModelAdmin):
     list_display = ('id', 'therapy', 'doctor')
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('id', 'doctor', 'client', 'created_at')
