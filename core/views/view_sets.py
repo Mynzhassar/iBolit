@@ -8,13 +8,14 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from core import models, serializers, permissions
 
+
 logger = logging.getLogger(__name__)
 
 
 class ClinicViewSet(viewsets.ModelViewSet):
     queryset = models.Clinic.objects.all()
     serializer_class = serializers.ClinicDetailedSerializer
-    permission_classes = (permissions.UserPermission, )
+    permission_classes = (IsAuthenticated, )
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -26,11 +27,7 @@ class ClinicViewSet(viewsets.ModelViewSet):
         logger.info(f"{self.request.user} created clinic: {serializer.data.get('username')}")
         return serializer.data
 
-    @action(methods=['GET'], detail=False)
-    def my(self, request):
-        clinics = models.Clinic.objects.filter(creator_id=self.request.user.id)
-        serializer = self.get_serializer(clinics, many=True)
-        return Response(serializer.data)
+
 
     @action(methods=['GET', 'POST'], detail=True)
     def departments(self, request, pk):
@@ -41,13 +38,14 @@ class ClinicViewSet(viewsets.ModelViewSet):
 
         if request.method == 'POST':
             instance = self.get_object()
-        #   request.data['project_id'] = instance.id
+        ##  clinic = models.Clinic.objects.get(id=self.kwargs['pk'])
             serializer = serializers.DepartmentDetailedSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
             logger.info(f"{self.request.user} created department: {serializer.data.get('username')}")
-            return Response(serializer.errors)
+            return Response(serializer.data)
+
 
     @action(methods=['GET', 'POST'], detail=True)
     def services(self, request, pk):
@@ -73,7 +71,7 @@ class DepartmentDetailedViewSet(mixins.RetrieveModelMixin,
                          viewsets.GenericViewSet):
     queryset = models.Department.objects.all()
     serializer_class = serializers.DepartmentDetailedSerializer
-    permission_classes = (permissions.UserPermission, )
+    permission_classes = (IsAuthenticated, )
 
     @action(methods=['GET', 'POST'], detail=True)
     def doctors(self, request, pk):

@@ -9,5 +9,5 @@ router.register('clinics', ClinicViewSet)
 router.register('departments', DepartmentDetailedViewSet)
 router.register('services', OrderToServiceViewSet)
 router.register('doctors', OrderToDoctorViewSet)
-
+router.register('orders',OrderViewSet)
 urlpatterns =router.urls
