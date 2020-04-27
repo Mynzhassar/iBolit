@@ -1,23 +1,25 @@
+from abc import ABC
+
 from rest_framework import serializers
 from users.serializers import UserSerializer
-from core.models import Clinic, Department, Doctor, Consultant, Service, Order,TherapyDocument
+from core.models import Clinic, Department, Doctor, Consultant, Service, Order, TherapyDocument
 from utils import validators
-
 
 
 class ClinicSerializer(serializers.ModelSerializer):
     title = serializers.CharField(required=True)
     rating = serializers.IntegerField(validators=[validators.rating_validator])
-#   creator = UserSerializer(read_only=True)
+
+    #   creator = UserSerializer(read_only=True)
 
     class Meta:
         model = Clinic
-        fields = ('id', 'title', 'rating', 'status', )
+        fields = ('id', 'title', 'rating', 'status',)
 
 
 class ClinicDetailedSerializer(ClinicSerializer):
     class Meta(ClinicSerializer.Meta):
-        fields = ClinicSerializer.Meta.fields + ('address', )
+        fields = ClinicSerializer.Meta.fields + ('address',)
 
 
 class DepartmentSerializer(serializers.ModelSerializer):
@@ -55,6 +57,7 @@ class DoctorSerializer(serializers.Serializer):
         instance.save()
         return instance
 
+
 class ConsultantSerializer(serializers.Serializer):
     phone = serializers.CharField(required=True, validators=[validators.phone_number_validator])
 
@@ -86,10 +89,10 @@ class ServiceSerializer(serializers.ModelSerializer):
         model = Service
         fields = ('id', 'title', 'clinic_id', 'clinic')
 
+
 class ServiceDetailedSerializer(ServiceSerializer):
     class Meta(ServiceSerializer.Meta):
         fields = ServiceSerializer.Meta.fields + ('price', 'cabinet')
-
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -104,7 +107,6 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class TherapyDocumentSerializer(serializers.ModelSerializer):
     doctor = DoctorSerializer(read_only=True)
-
 
     class Meta:
         model = TherapyDocument

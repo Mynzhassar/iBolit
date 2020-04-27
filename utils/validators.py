@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 from utils.constants import *
 
-ALLOWED_EXTENSIONS = ['.jpg', '.png','.docx']
+ALLOWED_EXTENSIONS = ['.jpg', '.png', '.docx']
 
 
 def validate_document_size(value):
@@ -55,9 +55,7 @@ def password_validator(password):
     if not has_letter: raise ValueError("Password must contain at lest one letter")
 
 
-
 def therapy_document_size(value):
-
     if value.size > 200000:
         raise ValidationError('invalid file size')
 

@@ -1,7 +1,7 @@
 from django.db import models
 from utils.constants import *
 from utils import validators
-from core.managers import ClinicManager, DepartmentManager, OrderManager,ServiceManager
+from core.managers import ClinicManager, DepartmentManager, OrderManager, ServiceManager
 from users.models import MyUser
 from utils.validators import *
 from utils.upload import *
@@ -13,7 +13,7 @@ class Clinic(models.Model):
     info = models.TextField(max_length=255)
     rating = models.PositiveSmallIntegerField(default=1)
     status = models.PositiveSmallIntegerField(choices=CLINIC_STATUSES, default=CLINIC_STATE)
-    #creator = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='clinics')
+    # creator = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='clinics')
 
     objects = ClinicManager()
 
@@ -92,8 +92,6 @@ class Consultant(Staff):
         return f"{self.surname} {self.name}"
 
 
-
-
 class Order(models.Model):
     client = models.ForeignKey(MyUser, on_delete=models.CASCADE)
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='my_orders_to_doctor', null=True)
@@ -103,7 +101,6 @@ class Order(models.Model):
     date = models.CharField(max_length=10000)
     time = models.CharField(max_length=255)
 
-
     objects = OrderManager()
 
     def __str__(self):
@@ -112,5 +109,6 @@ class Order(models.Model):
 
 class TherapyDocument(models.Model):
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
-    therapy = models.FileField(upload_to=therapy_document_path, validators=[therapy_document_size,therapy_document_extension],
-                               null=True,blank=True)
+    therapy = models.FileField(upload_to=therapy_document_path,
+                               validators=[therapy_document_size, therapy_document_extension],
+                               null=True, blank=True)

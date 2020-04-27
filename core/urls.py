@@ -10,4 +10,4 @@ router.register('departments', DepartmentDetailedViewSet)
 router.register('services', OrderToServiceViewSet)
 router.register('doctors', OrderToDoctorViewSet)
 
-urlpatterns =router.urls
+urlpatterns = router.urls
